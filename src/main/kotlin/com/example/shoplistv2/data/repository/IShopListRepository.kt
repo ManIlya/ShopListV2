@@ -7,4 +7,6 @@ interface IShopListRepository {
     fun addItem(message: String)
     fun updateItem(item: ShopItem)
     fun deleteItem(item: ShopItem)
+    fun openFile(fileName: String)
+    fun saveFile(fileName: String): Boolean
 }

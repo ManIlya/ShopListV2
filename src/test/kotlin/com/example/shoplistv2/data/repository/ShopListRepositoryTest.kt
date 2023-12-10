@@ -58,4 +58,13 @@ class ShopListRepositoryTest {
         val shopListAfterDelete = repository.getShopList()
         assertEquals(0, shopListAfterDelete.size)
     }
+
+    @Test
+    fun openFile() {
+
+    }
+
+    @Test
+    fun saveFile() {
+    }
 }
