@@ -9,8 +9,7 @@ class ShopListRepository : IShopListRepository {
     override fun getShopList(): List<ShopItem> = items
 
     override fun addItem(message: String) {
-        val itemId = items.size + 1
-        val newItem = ShopItem(id = itemId, checked = false, message = message)
+        val newItem = ShopItem(message = message)
         items.add(index = 0, element = newItem)
     }
 
