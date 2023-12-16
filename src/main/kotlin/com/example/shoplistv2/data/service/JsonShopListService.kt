@@ -1,31 +1,40 @@
 package com.example.shoplistv2.data.service
 
 import com.example.shoplistv2.data.model.ShopItem
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import com.fasterxml.jackson.core.JsonParseException
+import com.fasterxml.jackson.databind.JsonMappingException
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import java.io.File
+import java.io.IOException
 
-class JsonShopListService(private val filePath: String) : IShopListService {
+class JsonShopItemService(private val objectMapper: ObjectMapper = ObjectMapper().registerKotlinModule()) : IShopListService {
 
-    override fun saveItems(items: List<ShopItem>): Boolean {
-        return try {
-            val json = jacksonObjectMapper().writeValueAsString(items)
-            File(filePath).writeText(json)
-            true
-        } catch (e: Exception) {
-            //e.printStackTrace()
-            println(e.message)
-            false
+    override fun saveItems(shopItems: List<ShopItem>, path: String): Boolean {
+        if (path.isBlank()) {
+            throw IllegalArgumentException("File name must not be empty")
         }
+
+        val json = objectMapper.writeValueAsString(shopItems)
+        File(path).writeText(json)
+        return true
     }
 
-    override fun loadItems(): List<ShopItem> {
-        return try {
-            val json = File(filePath).readText()
-            jacksonObjectMapper().readValue(json, jacksonTypeRef<List<ShopItem>>())
-        } catch (e: Exception) {
-            println(e.message)
-            emptyList()
+    override fun loadItems(path: String): List<ShopItem> {
+        try {
+            val json = File(path).readText()
+            return if (json.isNotEmpty()) {
+                objectMapper.readValue(json)
+            } else {
+                emptyList()
+            }
+        } catch (e: JsonParseException) {
+            throw IOException("Error parsing JSON from file: $path", e)
+        } catch (e: JsonMappingException) {
+            throw IOException("Error mapping JSON to ShopItem list from file: $path", e)
+        } catch (e: IOException) {
+            throw IOException("Error reading file: $path", e)
         }
     }
 }

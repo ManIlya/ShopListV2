@@ -42,7 +42,7 @@ class ShopListPresenter(private val view: IShopListView, private val repository:
     }
 
     override fun changeCheckItem(item: ShopItem) {
-        repository.updateItem(item)
+        repository.updateCheckStatus(item.id)
         getList()
     }
 

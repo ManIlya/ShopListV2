@@ -3,6 +3,7 @@ package com.example.shoplistv2
 import com.example.shoplistv2.data.model.FilterEnum
 import com.example.shoplistv2.data.model.ShopItem
 import com.example.shoplistv2.data.repository.ShopListRepository
+import com.example.shoplistv2.data.service.JsonShopItemService
 import com.example.shoplistv2.view.presenter.IShopListPresenter
 import com.example.shoplistv2.view.presenter.ShopListPresenter
 import com.example.shoplistv2.view.view.IShopListView
@@ -36,7 +37,7 @@ class ShopListController : IShopListView {
     @FXML
     private lateinit var groupFilter: ToggleGroup
 
-    private val presenter: IShopListPresenter = ShopListPresenter(this, ShopListRepository())
+    private val presenter: IShopListPresenter = ShopListPresenter(this, ShopListRepository(JsonShopItemService()))
 
 
     @FXML

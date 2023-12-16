@@ -8,6 +8,7 @@ module com.example.shoplistv {
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.kotlin;
     requires java.desktop;
+    requires org.slf4j;
 
     opens com.example.shoplistv2 to javafx.fxml;
     exports com.example.shoplistv2;

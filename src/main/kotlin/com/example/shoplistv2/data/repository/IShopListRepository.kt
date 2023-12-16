@@ -5,7 +5,7 @@ import com.example.shoplistv2.data.model.ShopItem
 interface IShopListRepository {
     fun getShopList(): List<ShopItem>
     fun addItem(message: String)
-    fun updateItem(item: ShopItem)
+    fun updateCheckStatus(id: String)
     fun deleteItem(item: ShopItem)
     fun openFile(fileName: String)
     fun saveFile(fileName: String): Boolean

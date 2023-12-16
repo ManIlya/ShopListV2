@@ -1,40 +1,43 @@
 package com.example.shoplistv2.data.repository
 
 import com.example.shoplistv2.data.model.ShopItem
-import com.example.shoplistv2.data.service.JsonShopListService
+import com.example.shoplistv2.data.service.IShopListService
+import com.example.shoplistv2.data.service.JsonShopItemService
 
-class ShopListRepository : IShopListRepository {
-    private val items = mutableListOf<ShopItem>()
 
-    override fun getShopList(): List<ShopItem> = items
+class ShopListRepository(private val shopItemService: IShopListService = JsonShopItemService()) : IShopListRepository {
+
+    private var shopList: MutableList<ShopItem> = mutableListOf()
+
+    override fun getShopList(): List<ShopItem> {
+        return shopList.toList()
+    }
 
     override fun addItem(message: String) {
         val newItem = ShopItem(message = message)
-        items.add(index = 0, element = newItem)
+        shopList.add(0, newItem)
     }
 
-    override fun updateItem(item: ShopItem) {
-        val existingShopList = items.find { it.id == item.id }
-        items.remove(existingShopList)
-        items.add(0, item)
+    override fun updateCheckStatus(id: String) {
+        val existingItem = shopList.find { it.id == id }
+        existingItem?.let {
+            shopList.remove(it)
+            shopList.add(0, it)
+        }
     }
 
     override fun deleteItem(item: ShopItem) {
-        items.remove(item)
+        shopList.removeIf { it.id == item.id }
     }
 
     override fun openFile(fileName: String) {
-        val service = JsonShopListService(fileName)
-        val newItems = service.loadItems()
-        items.clear()
-        items.addAll(newItems)
+        shopList = shopItemService.loadItems(fileName).toMutableList()
     }
 
     override fun saveFile(fileName: String): Boolean {
-        val service = JsonShopListService(fileName)
-        val newItems = service.saveItems(items)
+        val newItems = shopItemService.saveItems(shopList, fileName, )
         if (newItems) {
-            items.clear()
+            shopList.clear()
         }
         return newItems
     }
